@@ -86,22 +86,41 @@ var link = '../img/close.png';
                         </div>\
                         <div id="mod_mask"></div>\
                       </div>';
+			var $content  = $('<div/>');
+
+			function centerContent() {
+				$('#mod_cont').css('top',    $(window).height()/7 + $(window).scrollTop());
+      	$('#mod_cont').css('left',   ($(window).width()/2-$('#mod_cont').width()/2 + $(window).scrollLeft())/2 );
+				$('#mod_cont').css('right',  ($(window).width()/2-$('#mod_cont').width()/2 + $(window).scrollLeft())/2 );
+      	$('#mod_mask').css('height', $(document).height()+'px');
+			}
+
+			$(window).bind('resize', function(){
+				setTimeout(function(){
+					centerContent();
+				}, 500);
+			});
 
       return this.on('click', function(event){
         var src = $(this).attr(settings.attr).toLowerCase();
 				if( /\.(jpg|jpeg|png|gif|bmp)$/.test(src) ){
-          var image = '<img src="'+src+'" alt="image" id="mod_img">';
-          $(template.replace('%content', image)).appendTo('body');
-        }
+          $content.html('<img src="'+src+'" alt="image" id="mod_img">');
+        } else if ($(src).length !== 0) {
+					$content.html( $(src).html() );
+				}
 
+				$(template.replace('%content', $content.html())).appendTo('body');
         $('#mod_cont').fadeIn();
-        $('#mod_img').load(function() {
-          $('#mod_cont').css('top',    $(window).height()/7 + $(window).scrollTop());
-          $('#mod_cont').css('left',   $(window).width()/2-$('#mod_cont').width()/2 + $(window).scrollLeft());
-          $('#mod_mask').css('height', $(document).height()+'px');
-        });
+
+				
+
+				centerContent();
+        
         event.preventDefault();
       });
+
+
+			
 
 
 
