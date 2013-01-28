@@ -89,7 +89,7 @@ var link = '../img/close.png';
 
       return this.on('click', function(event){
         var src = $(this).attr(settings.attr).toLowerCase();
-        if( new RegExp('\.(jpg|jpeg|png|gif|bmp)$', 'i').exec(src) ){
+				if( /\.(jpg|jpeg|png|gif|bmp)$/.test(src) ){
           var image = '<img src="'+src+'" alt="image" id="mod_img">';
           $(template.replace('%content', image)).appendTo('body');
         }
