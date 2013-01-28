@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>lightbox demo</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="../css/lightbox.css">
+<style>
+</style>
+</head>
+<body>
+  <div class="hidden" id="data">
+  	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur et mi ac felis ullamcorper pulvinar. Sed eget commodo odio. Donec pharetra placerat purus id mollis. Nunc tempus ultrices justo. Etiam non quam sed tortor viverra vehicula vel vitae risus. Nam rhoncus pretium metus, nec viverra velit suscipit id. Nulla at rutrum mauris. Aenean a nisi enim, feugiat lacinia nisl. Donec eu fringilla ante.
+  </div>
+
+  <h2>Thumbnails</h2>
+  <a href="img/1.jpg" class="lightbox">
+  	<img src="img/1.jpg" alt="first image">
+  </a>
+  <a href="img/1.jpg" class="lightbox">
+  	<img src="img/2.jpg" alt="second image">
+  </a>
+
+  <h2>Local content</h2>
+  <a href="#data" class="lightbox">Load data from hidden div</a>
+
+  <h2>Ajax content</h2>
+  <a href="ajax.html" class="lightbox">Load data from ajax file</a>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="../js/lightbox.js"></script>
+  <script>
+  	$('.lightbox').lightbox();
+  </script>
+</body>
+</html>
+   

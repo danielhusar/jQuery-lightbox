@@ -1,0 +1,32 @@
+#modal{
+	
+}
+#mod_mask{
+	position: absolute;  
+	width: 100%;  
+	height: 100%;  
+	top: 0;  
+	left: 0;  
+	z-index: 9000;  
+	background-color: #ccc;  
+	filter: alpha(opacity=50);  
+	opacity: 0.5;
+}
+#mod_cont{
+	position: absolute;  
+	z-index: 9001;  
+	background-color: white;  
+	border: 1px solid #aaa;  
+	-moz-box-shadow: 0 0 8px #aaa;
+	-webkit-box-shadow: 0 0 8px#aaa;
+	box-shadow: 0 0 8px #aaa;
+	max-width: 900px;  
+	margin-bottom: 20px;
+	display: none;
+}
+#mod_close{
+	position: absolute;
+	cursor: pointer;
+	right: -10px;
+	top: -10px;
+}
