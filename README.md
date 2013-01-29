@@ -1,2 +1,4 @@
-Simple jquery lightbox
-======================
+Simple responsive jquery lightbox
+=================================
+
+See demo section for demos.
