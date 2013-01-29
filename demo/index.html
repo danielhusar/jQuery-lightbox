@@ -10,21 +10,24 @@
 </head>
 <body>
   <div class="hidden" id="data">
+    <div>
   	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur et mi ac felis ullamcorper pulvinar. Sed eget commodo odio. Donec pharetra placerat purus id mollis. Nunc tempus ultrices justo. Etiam non quam sed tortor viverra vehicula vel vitae risus. Nam rhoncus pretium metus, nec viverra velit suscipit id. Nulla at rutrum mauris. Aenean a nisi enim, feugiat lacinia nisl. Donec eu fringilla ante.
+    </div>
   </div>
 
   <h2>Thumbnails</h2>
-  <a href="img/1.jpg" class="lightbox">
-  	<img src="img/1.jpg" alt="first image">
+  <a href="http://lorempixel.com/800/400/" class="lightbox" data-type="image">
+  	<img src="http://lorempixel.com/350/200/" alt="first image">
   </a>
-  <a href="img/2.jpg" class="lightbox">
-  	<img src="img/2.jpg" alt="second image">
+  <a href="http://lorempixel.com/800/400/" class="lightbox" data-type="image">
+  	<img src="http://lorempixel.com/350/200/" alt="second image">
   </a>
 
   <h2>Local content</h2>
   <a href="#data" class="lightbox">Load data from hidden div</a>
 
   <h2>Ajax content</h2>
+  <p> (it will work only if you are running scripts from server)</p>
   <a href="ajax.html" class="lightbox">Load data from ajax file</a>
 
 

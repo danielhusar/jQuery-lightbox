@@ -1,130 +1,111 @@
-/*
-$(document).ready(function() { 
-var link = '../img/close.png'; 
-    //select all the a tag with name equal to modal
-    $('a.lightbox').click(function(e) {
-       //Cancel the link behavior
-       e.preventDefault();
-
-       //check if we are loading image or html content
-       var id = $(this).attr('href').toLowerCase();
-       var reg = new RegExp('\.(jpg|jpeg|png|gif|bmp)$', 'i');
-       var image = reg.exec(id);
-       if(image)
-       {
-          var template = '<div id="modal"><div id="mod_cont"><img src="'+link+'" alt="close" id="mod_close"><img src="'+id+'" alt="image" id="mod_img"></div><div id="mod_mask"></div></div>';
-          $('body').append(template).fadeIn();
-          
-          $('#mod_img').load(function() {
-          	$('#mod_cont').css('top',    $(window).height()/7 + $(window).scrollTop());
-          	$('#mod_cont').css('left',   $(window).width()/2-$('#mod_cont').width()/2 + $(window).scrollLeft());
-          	$('#mod_mask').css('height', $(document).height()+'px');
-          	//alert($('#mod_cont').width());
-          });
-       }
-       else
-       {
-       $.get(id, function(data){     
-          var template = '<div id="modal"><div id="mod_cont"><img src="'+link+'" alt="close" id="mod_close">'+data+'</div><div id="mod_mask"></div></div>';
-          $('body').append(template).fadeIn();
-          //$('#mod_cont').ready(function() {
-            $('#mod_cont').css('top',    $(window).height()/5 + $(window).scrollTop());
-            $('#mod_cont').css('left',   $(window).width()/2-$('#mod_cont').width()/2 + + $(window).scrollLeft());
-            $('#mod_mask').css('height', $(document).height()+'px');
-          // }); 
-        });   
-       }
-    });
-
-    $('#mod_mask, #mod_close, .mclose').live('click', function() {
-      $('#modal').fadeOut(500, function(){
-        $(this).remove();
-      });  
-    });
-    
-    $(document).keydown(function(e) {
-    // ESCAPE key pressed
-    	if (e.keyCode == 27) {
-        	$('#modal').remove(); 
-    	}
-	});
-
-});
-
-*/
+/**
+ * author: Daniel Husar
+ */
 
 (function (window, document, $, undefined) {
-  'use strict';
+	'use strict';
 
 
-  $.fn.extend({
-    lightbox: function (options) {
+	$.fn.extend({
+		lightbox: function (options) {
 
-      var settings = $.extend( {
-        'effect' : 'none',
-        'attr'   : 'href'
-      }, options);
+			var settings = $.extend( {
+				'sourceAttr' : 'href',      //source where to find the url for modal content
+				'typeAttr'   : 'data-type'  //type of the content, can be image, static, ajax  (if not present it will guess)
+			}, options);
 
-    
-      $(document).on('keydown', function(event) {
-        if (event.keyCode == 27) {
-          $('#modal').remove(); 
-        }
-      });
+		
+			//main variables
+			var template = '<div id="lightbox">\
+												<div id="lightbox-content">\
+													<img src="../img/close.png" alt="close" id="lightbox-close">\
+													<div id="lightbox-data">\
+														%content\
+													</div>\
+												</div>\
+												<div id="lightbox-overlay"></div>\
+											</div>',
+					$lightbox,
+					$lightboxContent,
+					$lightboxOverlay;
 
-      $('body').on('click', '#mod_mask, #mod_close, .mclose', function(event) {
-        $('#modal').fadeOut(function(){
-          $(this).remove();
-        });  
-        event.preventDefault();
-      });
 
-      var template = '<div id="modal">\
-                        <div id="mod_cont">\
-                          <img src="../img/close.png" alt="close" id="mod_close">\
-                          %content\
-                        </div>\
-                        <div id="mod_mask"></div>\
-                      </div>';
-			var $content  = $('<div/>');
 
+			//center the content
 			function centerContent() {
-				$('#mod_cont').css('top',    $(window).height()/7 + $(window).scrollTop());
-      	$('#mod_cont').css('left',   ($(window).width()/2-$('#mod_cont').width()/2 + $(window).scrollLeft())/2 );
-				$('#mod_cont').css('right',  ($(window).width()/2-$('#mod_cont').width()/2 + $(window).scrollLeft())/2 );
-      	$('#mod_mask').css('height', $(document).height()+'px');
+
+				$lightbox = $('#lightbox'),
+				$lightboxContent = $('#lightbox-content'),
+				$lightboxOverlay = $('#lightbox-overlay');
+				
+				var leftSpace = ( $(window).width()/2 + $lightboxContent.width()/2 < $(window).width() ) 
+													? $(window).width()/2 - $lightboxContent.width()/2 - parseInt( ($('#lightbox-content').css('marginLeft') || 0).replace('px', ''))
+													: 0;
+				
+				$lightboxContent.css('left', leftSpace )
+												.css('top',        $(window).height()/7 + $(window).scrollTop())
+												.css('visibility', 'visible');
+				$lightboxOverlay.css('height',     $(document).height() + 'px');
 			}
 
+			//when window resize, recalculate lightbox position
 			$(window).bind('resize', function(){
 				setTimeout(function(){
 					centerContent();
 				}, 500);
 			});
 
-      return this.on('click', function(event){
-        var src = $(this).attr(settings.attr).toLowerCase();
-				if( /\.(jpg|jpeg|png|gif|bmp)$/.test(src) ){
-          $content.html('<img src="'+src+'" alt="image" id="mod_img">');
-        } else if ($(src).length !== 0) {
-					$content.html( $(src).html() );
+			//close modal when ESC pressed
+			$(document).on('keydown', function(event) {
+				if (event.keyCode == 27) {
+					$lightbox.remove(); 
 				}
+			});
 
-				$(template.replace('%content', $content.html())).appendTo('body');
-        $('#mod_cont').fadeIn();
+			//close modal on close icon and overlay clicked
+			$('body').on('click', '#lightbox-overlay, #lightbox-close, .lightbox-close', function(event) {
+				$lightbox.fadeOut(function(){
+					$(this).remove();
+				});  
+				event.preventDefault();
+			});
 
+
+			//show lightbox
+			return this.on('click', function(event){
+				var $this = $(this),
+						src = $this.attr(settings.sourceAttr).toLowerCase();
+
+				//image
+				if( /\.(jpg|jpeg|png|gif|bmp)$/.test(src) || $this.attr(settings.typeAttr) === 'image'){
+					$(template.replace('%content', '<img src="'+src+'" alt="image" id="lightbox-image">')).appendTo('body');
+					$('#lightbox-image').load(function(){
+						centerContent();
+					});
+					
+				//static content
+				} else if ($(src).length !== 0 || $this.attr(settings.typeAttr) === 'static') {
+					$(template.replace('%content', $(src).html())).appendTo('body');
+					centerContent();
+				 
+				//ajax  
+				} else {
+					$.ajax({
+						url : src,
+						crossDomain : true,
+						success : function (data) {
+							$(template.replace('%content', data)).appendTo('body');
+							centerContent();
+							
+						}
+					})
+				}
 				
-
-				centerContent();
-        
-        event.preventDefault();
-      });
+				event.preventDefault();
+			});
 
 
-			
-
-
-
-    }
-  });
+		}
+	});
 
 }(this, this.document, this.jQuery));
